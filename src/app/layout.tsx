@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Barlow_Condensed } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/ui/toaster";
 
 const fontSans = Barlow_Condensed({
   subsets: ["latin"],
@@ -28,7 +28,8 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <TooltipProvider>{children}</TooltipProvider>
+        {children}
+        <Toaster />
       </body>
     </html>
   );

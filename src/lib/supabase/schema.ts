@@ -35,6 +35,22 @@ export const rooms = pgTable("rooms", {
     .notNull(),
 });
 
+export const members = pgTable("members", {
+  id: uuid("id").defaultRandom().primaryKey().notNull(),
+  roomId: uuid("room_id")
+    .references(() => rooms.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    })
+    .notNull(),
+  userId: uuid("user_id")
+    .references(() => users.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    })
+    .notNull(),
+});
+
 export const messages = pgTable("messages", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
   type: messageType("type").default("text").notNull(),

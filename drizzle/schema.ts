@@ -19,6 +19,15 @@ export const rooms = pgTable("rooms", {
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 });
 
+export const users = pgTable("users", {
+	id: uuid("id").defaultRandom().primaryKey().notNull(),
+	username: text("username"),
+	email: text("email"),
+	avatarUrl: text("avatar_url"),
+	status: userStatus("status").default('OFFLINE').notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }),
+});
+
 export const messages = pgTable("messages", {
 	id: uuid("id").defaultRandom().primaryKey().notNull(),
 	type: messageType("type").default('text').notNull(),
@@ -30,11 +39,8 @@ export const messages = pgTable("messages", {
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 });
 
-export const users = pgTable("users", {
+export const members = pgTable("members", {
 	id: uuid("id").defaultRandom().primaryKey().notNull(),
-	username: text("username"),
-	email: text("email"),
-	avatarUrl: text("avatar_url"),
-	status: userStatus("status").default('OFFLINE').notNull(),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }),
+	roomId: uuid("room_id").notNull().references(() => rooms.id, { onDelete: "cascade", onUpdate: "cascade" } ),
+	userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade", onUpdate: "cascade" } ),
 });

@@ -9,6 +9,39 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      members: {
+        Row: {
+          id: string
+          room_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          room_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          room_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "members_room_id_rooms_id_fk"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "members_user_id_users_id_fk"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       messages: {
         Row: {
           created_at: string

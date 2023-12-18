@@ -8,6 +8,13 @@
       "when": 1702641719596,
       "tag": "0000_uneven_stingray",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1702906942839,
+      "tag": "0001_thick_tag",
+      "breakpoints": true
     }
   ]
 }
