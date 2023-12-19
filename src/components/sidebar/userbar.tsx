@@ -17,49 +17,40 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "../ui/use-toast";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { createRoom } from "@/lib/severActions/server-querries";
-import { Label } from "@radix-ui/react-label";
+import { createRoom } from "@/lib/severActions/server-queries";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { useSupabaseUser } from "@/lib/providers/supabase-user-provider";
+import { RoomSchema } from "@/lib/form-schema";
+import { v4 } from "uuid";
 
 type UserbarProps = {
   userId: string;
 };
 
-const RoomSchema = z.object({
-  targetId: z.string().describe("targetUserId").uuid({ message: "Invalid id" }),
-  access: z
-    .enum(["PRIVATE", "PUBLIC"], {
-      required_error: "You must select privacy access",
-    })
-    .default("PRIVATE"),
-});
-
 export default function Userbar({ userId }: UserbarProps) {
+  const { user, error: userError } = useSupabaseUser();
   const { toast } = useToast();
-  const form = useForm<z.infer<typeof RoomSchema>>({
+  const form = useForm<RoomForm>({
     mode: "onChange",
     resolver: zodResolver(RoomSchema),
-    defaultValues: { access: "PRIVATE", targetId: "" },
+    defaultValues: { access: "PRIVATE", targetId: "", creatorId: "", slug: "" },
   });
-
-  const supabase = createClientComponentClient();
 
   const isLoading = form.formState.isSubmitting;
 
   // TODO: create submit function
-  const onSubmit = async ({ targetId, access }: z.infer<typeof RoomSchema>) => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return;
+  const onSubmit = async ({ targetId, access }: RoomForm) => {
+    if (userError || !user) {
+      return;
+    }
 
-    const newRoom = {
-      creator: user.id,
-      target: targetId,
+    const newRoom: RoomForm = {
       access,
+      targetId,
+      creatorId: user.id,
+      slug: `${access}.${v4()}`,
     };
     const { error } = await createRoom(newRoom);
     if (error) {
@@ -108,13 +99,20 @@ export default function Userbar({ userId }: UserbarProps) {
                       >
                         <FormItem className="flex items-center space-x-2 space-y-0">
                           <FormControl>
-                            <RadioGroupItem defaultChecked value="PRIVATE" />
+                            <RadioGroupItem
+                              disabled={isLoading}
+                              defaultChecked
+                              value="PRIVATE"
+                            />
                           </FormControl>
                           <FormLabel>PRIVATE</FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-2 space-y-0">
                           <FormControl>
-                            <RadioGroupItem value="PUBLIC" />
+                            <RadioGroupItem
+                              disabled={isLoading}
+                              value="PUBLIC"
+                            />
                           </FormControl>
                           <FormLabel>PUBLIC</FormLabel>
                         </FormItem>
@@ -130,13 +128,18 @@ export default function Userbar({ userId }: UserbarProps) {
                   <FormItem>
                     <FormLabel>User ID</FormLabel>
                     <FormControl>
-                      <Input type="text" placeholder="user id" {...field} />
+                      <Input
+                        disabled={isLoading}
+                        type="text"
+                        placeholder="user id"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit">
+              <Button disabled={isLoading} type="submit">
                 {!isLoading ? "Create" : "Loading..."}
               </Button>
             </form>

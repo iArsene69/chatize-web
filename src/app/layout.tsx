@@ -3,6 +3,7 @@ import { Barlow_Condensed } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
+import { SupabaseUserProvider } from "@/lib/providers/supabase-user-provider";
 
 const fontSans = Barlow_Condensed({
   subsets: ["latin"],
@@ -28,7 +29,7 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        {children}
+        <SupabaseUserProvider>{children}</SupabaseUserProvider>
         <Toaster />
       </body>
     </html>

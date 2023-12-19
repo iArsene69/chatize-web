@@ -49,7 +49,7 @@ export default function Page() {
   });
 
   const isLoading = form.formState.isSubmitting;
-  const onSubmit = async ({ email, password }: Form) => {
+  const onSubmit = async ({ email, password }: LoginForm) => {
     const { error } = await actionSignUp({ email, password });
     if (error) {
       setSubmitError(error.message);

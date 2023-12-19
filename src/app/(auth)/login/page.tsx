@@ -10,7 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { FormSchema } from "@/lib/form-schema";
+import { LoginFormSchema } from "@/lib/form-schema";
 import { actionLogin } from "@/lib/severActions/auth-actions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
@@ -22,14 +22,14 @@ export default function LoginPage() {
   const router = useRouter();
   const [submitError, setSubmitError] = useState("");
 
-  const form = useForm<Form>({
+  const form = useForm<LoginForm>({
     mode: "onChange",
-    resolver: zodResolver(FormSchema),
+    resolver: zodResolver(LoginFormSchema),
     defaultValues: { email: "", password: "" },
   });
 
   const isLoading = form.formState.isSubmitting;
-  const onSubmit: SubmitHandler<Form> = async (formData) => {
+  const onSubmit: SubmitHandler<LoginForm> = async (formData) => {
     const { error } = await actionLogin(formData);
     if (error) {
       form.reset();
