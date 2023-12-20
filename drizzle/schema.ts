@@ -1,5 +1,5 @@
-import { pgTable, pgEnum, uuid, text, timestamp, foreignKey } from "drizzle-orm/pg-core"
-  import { sql } from "drizzle-orm"
+import { pgTable, pgEnum, uuid, text, timestamp, foreignKey, primaryKey } from "drizzle-orm/pg-core"
+  import { relations, sql } from "drizzle-orm"
 
 export const keyStatus = pgEnum("key_status", ['expired', 'invalid', 'valid', 'default'])
 export const keyType = pgEnum("key_type", ['stream_xchacha20', 'secretstream', 'secretbox', 'kdf', 'generichash', 'shorthash', 'auth', 'hmacsha256', 'hmacsha512', 'aead-det', 'aead-ietf'])
@@ -39,8 +39,32 @@ export const messages = pgTable("messages", {
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 });
 
-export const members = pgTable("members", {
-	id: uuid("id").defaultRandom().primaryKey().notNull(),
+export const roomsToUsers = pgTable("rooms_to_users", {
 	roomId: uuid("room_id").notNull().references(() => rooms.id, { onDelete: "cascade", onUpdate: "cascade" } ),
 	userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade", onUpdate: "cascade" } ),
+},
+(table) => {
+	return {
+		roomsToUsersRoomIdUserIdPk: primaryKey({ columns: [table.roomId, table.userId], name: "rooms_to_users_room_id_user_id_pk"})
+	}
 });
+
+export const roomsToUsersRelations = relations(roomsToUsers, ({ one }) => ({
+	user: one(users, {
+	  fields: [roomsToUsers.userId],
+	  references: [users.id],
+	}),
+	rooms: one(rooms, {
+	  fields: [roomsToUsers.roomId],
+	  references: [rooms.id],
+	}),
+  }));
+  
+  export const usersRelations = relations(users, ({ many }) => ({
+	members: many(roomsToUsers),
+  }));
+  
+  export const roomsRelations = relations(rooms, ({ many }) => ({
+	members: many(roomsToUsers),
+  }));
+  

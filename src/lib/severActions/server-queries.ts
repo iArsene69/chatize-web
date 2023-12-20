@@ -1,6 +1,6 @@
 "use server";
 
-import { members, rooms, users } from "../../../drizzle/schema";
+import { rooms, roomsToUsers, users } from "../../../drizzle/schema";
 import db from "../supabase/db";
 
 //TODO: createRoom function
@@ -23,7 +23,7 @@ export const createRoom = async ({
     if (!insertRooms) throw new Error("Failed to create room");
 
     insertRooms.map(async (room) => {
-      await db.insert(members).values([
+      await db.insert(roomsToUsers).values([
         { roomId: room.roomId, userId: creatorId },
         { roomId: room.roomId, userId: targetId },
       ]);
@@ -31,6 +31,45 @@ export const createRoom = async ({
 
     return { error: "" };
   } catch (error) {
-    return {error: error}
+    return { error: error };
+  }
+};
+
+export const getRoomAndUsers = async (roomId: string) => {
+  try {
+    const res = await db.query.roomsToUsers.findMany({
+      where: (m, { eq }) => eq(m.roomId, roomId),
+      with: {
+        user: true,
+        rooms: true,
+      },
+    });
+
+    if (res.length) return { data: res, error: null };
+    return { data: [], error: null };
+  } catch (error) {
+    return {
+      data: [],
+      error: "Something went wrong when fetch users and rooms",
+    };
+  }
+};
+
+export const getRooms = async (userId: string) => {
+  try {
+    const res = await db.query.roomsToUsers.findMany({
+      where: (m, { eq }) => eq(m.userId, userId),
+      with: {
+        rooms: true,
+      },
+    });
+
+    if (res.length) return { data: res.map(m => { return m.rooms; }) as unknown as Rooms[], error: null };
+    return { data: [], error: null };
+  } catch (error) {
+    return {
+      data: [],
+      error: `Something went wrong when fetching rooms ${error}`,
+    };
   }
 };

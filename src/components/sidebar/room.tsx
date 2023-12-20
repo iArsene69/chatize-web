@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Separator } from "../ui/separator";
 
 type RoomsProps = {
-  rooms: string;
+  rooms: Rooms;
 };
 
 export default function Rooms({ rooms }: RoomsProps) {
@@ -15,7 +15,7 @@ export default function Rooms({ rooms }: RoomsProps) {
       </Avatar>
       <div className="flex-auto">
         <div className="felx flex-col gap-2">
-          <div>Name</div>
+          <div>{rooms.slug}</div>
           <div className="text-xs">Message</div>
           <Separator orientation="horizontal" />
         </div>

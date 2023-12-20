@@ -1,15 +1,18 @@
+'use client'
+
 import React from "react";
 import { twMerge } from "tailwind-merge";
 import Userbar from "./userbar";
 import Room from "./room";
+import { useSupabaseUser } from "@/lib/providers/supabase-user-provider";
 
 type SidebarProps = {
   userId: string;
-  rooms: string;
   className?: string;
 };
 
-export default function Sidebar({ rooms, userId, className }: SidebarProps) {
+export default function Sidebar({ userId, className }: SidebarProps) {
+  const { user, rooms, error } = useSupabaseUser();
   return (
     <aside
       className={twMerge(
@@ -21,7 +24,10 @@ export default function Sidebar({ rooms, userId, className }: SidebarProps) {
         <Userbar userId={userId} />
       </div>
       <div className="px-4">
-        <Room rooms={rooms} />
+        {rooms.map((room, idx) => (
+          <Room rooms={room} key={idx} />
+        ))}
+        <p>{error}</p>
       </div>
     </aside>
   );
