@@ -24,6 +24,7 @@ import { Button } from "../ui/button";
 import { useSupabaseUser } from "@/lib/providers/supabase-user-provider";
 import { RoomSchema } from "@/lib/form-schema";
 import { v4 } from "uuid";
+import { useAppState } from "@/lib/providers/app-state-provider";
 
 type UserbarProps = {
   userId: string;
@@ -31,6 +32,7 @@ type UserbarProps = {
 
 export default function Userbar({ userId }: UserbarProps) {
   const { user, error: userError } = useSupabaseUser();
+  const {state, dispatch} = useAppState()
   const { toast } = useToast();
   const form = useForm<RoomForm>({
     mode: "onChange",

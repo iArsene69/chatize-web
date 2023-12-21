@@ -1,15 +1,31 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 import Userbar from "./userbar";
 import Room from "./room";
+import { useAppState } from "@/lib/providers/app-state-provider";
 
 type SidebarProps = {
   userId: string;
   className?: string;
-  rooms: Rooms[]
+  rooms: Rooms[] | [];
 };
 
 export default function Sidebar({ rooms, userId, className }: SidebarProps) {
+  const { dispatch, state } = useAppState();
+
+  useEffect(() => {
+    if (!state.rooms.length) {
+      dispatch({
+        type: "SET_ROOMS",
+        payload: {
+          rooms: rooms,
+        },
+      });
+    }
+  }, [rooms]);
+
   return (
     <aside
       className={twMerge(
