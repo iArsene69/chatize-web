@@ -10,7 +10,7 @@ type RoomsProps = {
 };
 
 export default function Rooms({ rooms, userId }: RoomsProps) {
-  const { state } = useAppState();
+  const { state, dispatch } = useAppState();
   const [name, setName] = useState("");
 
   useEffect(() => {
@@ -18,39 +18,30 @@ export default function Rooms({ rooms, userId }: RoomsProps) {
       const { data, error } = await getRoomAndUsers(roomId);
       if (!data && error) throw new Error(error);
       const roomName = data.map((r) => {
-        switch (r.rooms.access) {
+        switch (r.access) {
           case "PRIVATE":
-            const roomName = data.filter((r) => r.user.id !== userId);
-            return roomName.map((u) => {
-              return u.user.email;
-            });
+           return r.users.find((u) => u.id !== userId)?.email
           case "PUBLIC":
-            return r.rooms.slug;
-        }
-      }) as unknown as string;
-      setName(roomName[0]);
+            return r.slug;
+        } 
+      }) as unknown as string
+      setName(roomName);
     };
     getName(rooms.id);
   }, [rooms]);
 
-  // const {data, error} = await getRoomAndUsers(rooms.id)
-
-  // if(!data && error) throw new Error(error)
-
-  // const name = data.map(r => {
-  //   switch (r.rooms.access) {
-  //     case "PRIVATE":
-  //       const roomName = data.filter(r => r.user.id !== userId)
-  //       return roomName.map(u => {
-  //         return u.user.email
-  //       })
-  //     case "PUBLIC":
-  //       return r.rooms.slug
-  //   }
-  // }) as unknown as string
+  const selectRoom = (roomId: string) => {
+    dispatch({
+      type: "SELECT_ROOM",
+      payload: roomId,
+    });
+  };
 
   return (
-    <div className="flex justify-between gap-4 items-center">
+    <div
+      onClick={() => selectRoom(rooms.id)}
+      className="flex justify-between gap-4 items-center"
+    >
       <Avatar className="flex-shrink-0">
         <AvatarImage src="" />
         <AvatarFallback>AV</AvatarFallback>

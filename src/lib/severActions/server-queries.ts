@@ -3,7 +3,6 @@
 import { rooms, roomsToUsers, users } from "../../../drizzle/schema";
 import db from "../supabase/db";
 
-//TODO: createRoom function
 export const createRoom = async ({
   creatorId,
   targetId,
@@ -37,7 +36,7 @@ export const createRoom = async ({
 
 export const getRoomAndUsers = async (roomId: string) => {
   try {
-    const res = await db.query.roomsToUsers.findMany({
+    const response = await db.query.roomsToUsers.findMany({
       where: (m, { eq }) => eq(m.roomId, roomId),
       with: {
         user: true,
@@ -45,7 +44,40 @@ export const getRoomAndUsers = async (roomId: string) => {
       },
     });
 
-    if (res.length) return { data: res, error: null };
+    const RoomAndUserMap = new Map<string, RoomMember>();
+    response.forEach((res) => {
+      const {
+        rooms: { id, access, slug, createdAt },
+        user,
+      } = res;
+
+      const UserObj: Users = {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        status: user.status,
+        avatar_url: user.avatarUrl,
+        created_at: user.createdAt,
+      };
+
+      if (!RoomAndUserMap.has(id)) {
+        RoomAndUserMap.set(id, {
+          access,
+          created_at: createdAt,
+          id,
+          slug,
+          users: [UserObj],
+        });
+      } else {
+        const existingRoom = RoomAndUserMap.get(id);
+        if (existingRoom) {
+          existingRoom.users.push(UserObj);
+        }
+      }
+    });
+
+    if (RoomAndUserMap.size)
+      return { data: Array.from(RoomAndUserMap.values()), error: null };
     return { data: [], error: null };
   } catch (error) {
     return {
@@ -64,7 +96,13 @@ export const getRooms = async (userId: string) => {
       },
     });
 
-    if (res.length) return { data: res.map(m => { return m.rooms; }) as unknown as Rooms[], error: null };
+    if (res.length)
+      return {
+        data: res.map((m) => {
+          return m.rooms;
+        }) as unknown as Rooms[],
+        error: null,
+      };
     return { data: [], error: null };
   } catch (error) {
     return {

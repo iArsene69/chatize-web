@@ -42,7 +42,7 @@ export default function Userbar({ userId }: UserbarProps) {
 
   const isLoading = form.formState.isSubmitting;
 
-  // TODO: create submit function
+  // TODO: check if targeted user is already have a room with the creator
   const onSubmit = async ({ targetId, access }: RoomForm) => {
     if (userError || !user) {
       return;
@@ -71,7 +71,7 @@ export default function Userbar({ userId }: UserbarProps) {
   };
 
   return (
-    <div className="flex justify-between items-center w-full h-full bg-muted-foreground p-4">
+    <div className="flex justify-between items-center w-full h-full bg-primary p-4">
       <Avatar>
         <AvatarImage src="" />
         <AvatarFallback>AV</AvatarFallback>

@@ -17,5 +17,8 @@ declare global {
   type Users = TABLES["users"]["Row"];
   type Rooms = TABLES["rooms"]["Row"];
   type Messages = TABLES["messages"]["Row"];
-  type RoomsAndUser = TABLES["rooms_to_users"]["Row"]
+  type RoomsAndUser = TABLES["rooms_to_users"]["Row"];
+  type RoomMember = Rooms & {
+    users: Users[];
+  };
 }

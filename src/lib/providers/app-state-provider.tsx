@@ -1,18 +1,26 @@
 "use client";
 
-import React, { Dispatch, createContext, useContext, useEffect, useReducer } from "react";
+import React, {
+  Dispatch,
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+} from "react";
 
 interface AppState {
   rooms: Rooms[] | [];
+  selectedRoom: Rooms | undefined;
 }
 
 type Action =
   | { type: "ADD_ROOM"; payload: Rooms }
   | { type: "SET_ROOMS"; payload: { rooms: Rooms[] | [] } }
   | { type: "UPDATE_ROOM"; payload: { room: Partial<Rooms>; roomId: string } }
-  | { type: "DELETE_ROOM"; payload: string };
+  | { type: "DELETE_ROOM"; payload: string }
+  | { type: "SELECT_ROOM"; payload: string };
 
-const initialState: AppState = { rooms: [] };
+const initialState: AppState = { rooms: [], selectedRoom: undefined };
 
 const appReducer = (
   state: AppState = initialState,
@@ -46,6 +54,11 @@ const appReducer = (
       return {
         ...state,
         rooms: state.rooms.filter((room) => room.id !== action.payload),
+      };
+    case "SELECT_ROOM":
+      return {
+        ...state,
+        selectedRoom: state.rooms.find((room) => room.id === action.payload),
       };
     default:
       return initialState;
