@@ -11,6 +11,7 @@ import React, {
 interface AppState {
   rooms: Rooms[] | [];
   selectedRoom: Rooms | undefined;
+  roomAndUsers: RoomMember[] | []
 }
 
 type Action =
@@ -18,9 +19,10 @@ type Action =
   | { type: "SET_ROOMS"; payload: { rooms: Rooms[] | [] } }
   | { type: "UPDATE_ROOM"; payload: { room: Partial<Rooms>; roomId: string } }
   | { type: "DELETE_ROOM"; payload: string }
-  | { type: "SELECT_ROOM"; payload: string };
+  | { type: "SELECT_ROOM"; payload: string }
+  | {type: "SET_R_USERS"; payload: {roomAndUsers: RoomMember[] | []}}
 
-const initialState: AppState = { rooms: [], selectedRoom: undefined };
+const initialState: AppState = { rooms: [], selectedRoom: undefined, roomAndUsers: [] };
 
 const appReducer = (
   state: AppState = initialState,
@@ -60,6 +62,11 @@ const appReducer = (
         ...state,
         selectedRoom: state.rooms.find((room) => room.id === action.payload),
       };
+      case "SET_R_USERS":
+        return{
+          ...state,
+          roomAndUsers: action.payload.roomAndUsers
+        }
     default:
       return initialState;
   }

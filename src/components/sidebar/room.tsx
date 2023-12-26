@@ -17,14 +17,21 @@ export default function Rooms({ rooms, userId }: RoomsProps) {
     const getName = async (roomId: string) => {
       const { data, error } = await getRoomAndUsers(roomId);
       if (!data && error) throw new Error(error);
+      dispatch({
+        type: "SET_R_USERS",
+        payload: { roomAndUsers: data },
+      });
       const roomName = data.map((r) => {
         switch (r.access) {
           case "PRIVATE":
-           return r.users.find((u) => u.id !== userId)?.email
+            return (
+              r.users.find((u) => u.id !== userId)?.username ||
+              r.users.find((u) => u.id !== userId)?.email
+            );
           case "PUBLIC":
             return r.slug;
-        } 
-      }) as unknown as string
+        }
+      }) as unknown as string;
       setName(roomName);
     };
     getName(rooms.id);
@@ -40,7 +47,7 @@ export default function Rooms({ rooms, userId }: RoomsProps) {
   return (
     <div
       onClick={() => selectRoom(rooms.id)}
-      className="flex justify-between gap-4 items-center"
+      className="flex justify-between gap-4 cursor-pointer items-center"
     >
       <Avatar className="flex-shrink-0">
         <AvatarImage src="" />
