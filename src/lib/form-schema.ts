@@ -32,3 +32,17 @@ export const RoomSchema = z.object({
     .default("PRIVATE"),
   slug: z.string().describe("slug"),
 });
+
+export const MessageSchema = z.object({
+  message: z.string().describe("message").max(300, "Nuh-uh only 300 characters bro"),
+  type: z.enum(["text", "picture", "video", "document"], {
+    required_error: "Select what type of message you want"
+  }).default("text"),
+  fileUrl: z.string().describe("fileUrl"),
+  userId: z.string().describe("userId").uuid({message: "Invalid ID"}),
+  roomId: z.string().describe("roomId").uuid({message: "Invalid ID"}),
+  willDelete: z.string().describe('willDelete').datetime({
+    message: "Invalid time string",
+    precision: 1
+  })
+})

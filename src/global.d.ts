@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   LoginFormSchema,
+  MessageSchema,
   RoomSchema,
   SignUpFormSchema,
 } from "./lib/form-schema";
@@ -14,6 +15,7 @@ declare global {
   type SignUpForm = z.infer<typeof SignUpFormSchema>;
   type LoginForm = z.infer<typeof LoginFormSchema>;
   type RoomForm = z.infer<typeof RoomSchema>;
+  type MessageForm = z.infer<typeof MessageSchema>
   type Users = TABLES["users"]["Row"];
   type Rooms = TABLES["rooms"]["Row"];
   type Messages = TABLES["messages"]["Row"];
