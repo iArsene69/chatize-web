@@ -1,5 +1,6 @@
 "use client";
 
+import MessageInput from "@/components/message/message-input";
 import { useAppState } from "@/lib/providers/app-state-provider";
 import React from "react";
 
@@ -12,6 +13,9 @@ export default function ChatPage() {
       ) : (
         <div>{state.selectedRoom.slug}</div>
       )}
+      <div className="absolute bottom-0">
+        <MessageInput />
+      </div>
     </div>
   );
 }

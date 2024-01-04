@@ -1,0 +1,11 @@
+.input-div:empty + .placeholder-div {
+  opacity: 1;
+}
+
+.input-div:focus + .placeholder-div {
+  padding: 0 6px 0px;
+}
+
+.input-div:focus {
+  padding: 0 6px 0px;
+}

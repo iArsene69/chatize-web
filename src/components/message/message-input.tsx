@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem } from "../ui/form";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
+import { ChatInput } from "../global/custom-chat-field";
 
 export default function MessageInput() {
   const { state } = useAppState();
@@ -35,7 +36,7 @@ export default function MessageInput() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-               <Textarea />
+                <ChatInput className="w-[700px]" {...field} />
               </FormControl>
             </FormItem>
           )}
