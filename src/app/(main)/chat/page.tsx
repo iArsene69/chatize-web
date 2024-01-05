@@ -8,14 +8,10 @@ export default function ChatPage() {
   const { state } = useAppState();
   return (
     <div>
-      {!state.selectedRoom ? (
-        <div>Chat app</div>
-      ) : (
-        <div>{state.selectedRoom.slug}</div>
-      )}
-      <div className="absolute bottom-0">
+      <div className="h-screen"></div>
+      <footer className="relative z-20 box-border flex-none order-3 w-full min-h-[62px]">
         <MessageInput />
-      </div>
+      </footer>
     </div>
   );
 }

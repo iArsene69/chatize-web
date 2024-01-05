@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
 import { SupabaseUserProvider } from "@/lib/providers/supabase-user-provider";
 import AppStateProvider from "@/lib/providers/app-state-provider";
+import { ThemeProvider } from "@/lib/providers/theme-provider";
 
 const fontSans = Barlow_Condensed({
   subsets: ["latin"],
@@ -30,12 +31,20 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <AppStateProvider>
-          <SupabaseUserProvider>
-            {children}
-            <Toaster />
-          </SupabaseUserProvider>
-        </AppStateProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableColorScheme
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AppStateProvider>
+            <SupabaseUserProvider>
+              {children}
+              <Toaster />
+            </SupabaseUserProvider>
+          </AppStateProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

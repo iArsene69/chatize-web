@@ -10,6 +10,7 @@ import { Form, FormControl, FormField, FormItem } from "../ui/form";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { ChatInput } from "../global/custom-chat-field";
+import { Button } from "../ui/button";
 
 export default function MessageInput() {
   const { state } = useAppState();
@@ -29,18 +30,31 @@ export default function MessageInput() {
   });
   return (
     <Form {...form}>
-      <form>
-        <FormField
-          control={form.control}
-          name="message"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <ChatInput className="w-[700px]" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+      <form className="flex justify-between items-center">
+        <div className="flex-1">
+          <FormField
+            control={form.control}
+            name="message"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <ChatInput
+                    className="min-w-[300px]"
+                    placeholder="Type a message"
+                    {...field}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+        <Button
+          variant="outline"
+          size="icon"
+          className="rounded-full border border-primary"
+        >
+          Y
+        </Button>
       </form>
     </Form>
   );

@@ -24,7 +24,7 @@ export default async function ChatPageLayout({
   return (
     <main className="flex flex-row overflow-hidden h-screen w-screen">
       <Sidebar rooms={rooms} userId={user.id} />
-      <div className="border border-primary/75 border-1-[1px] w-full relative overflow-y-scroll">
+      <div className="w-full relative overflow-y-hidden">
         {children}
       </div>
     </main>
