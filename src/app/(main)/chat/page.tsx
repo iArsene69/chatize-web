@@ -8,7 +8,6 @@ export default function ChatPage() {
   const { state } = useAppState();
   return (
     <div>
-      <div className="h-screen"></div>
       <footer className="relative z-20 box-border flex-none order-3 w-full min-h-[62px]">
         <MessageInput />
       </footer>

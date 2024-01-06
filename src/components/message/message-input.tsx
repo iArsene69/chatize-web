@@ -7,8 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem } from "../ui/form";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
 import { ChatInput } from "../global/custom-chat-field";
 import { Button } from "../ui/button";
 
@@ -31,6 +29,14 @@ export default function MessageInput() {
   return (
     <Form {...form}>
       <form className="flex justify-between items-center">
+        <FormField 
+        control={form.control}
+        name="type"
+        render={({field}) => (
+          <FormItem>
+            
+          </FormItem>
+        )}/>
         <div className="flex-1">
           <FormField
             control={form.control}

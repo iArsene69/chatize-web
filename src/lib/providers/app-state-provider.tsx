@@ -11,7 +11,8 @@ import React, {
 interface AppState {
   rooms: Rooms[] | [];
   selectedRoom: Rooms | undefined;
-  roomAndUsers: RoomMember[] | []
+  roomAndUsers: RoomMember[] | [];
+  messages: Messages[] | [];
 }
 
 type Action =
@@ -20,9 +21,21 @@ type Action =
   | { type: "UPDATE_ROOM"; payload: { room: Partial<Rooms>; roomId: string } }
   | { type: "DELETE_ROOM"; payload: string }
   | { type: "SELECT_ROOM"; payload: string }
-  | {type: "SET_R_USERS"; payload: {roomAndUsers: RoomMember[] | []}}
+  | { type: "SET_R_USERS"; payload: { roomAndUsers: RoomMember[] | [] } }
+  | { type: "ADD_MESSAGE"; payload: Messages }
+  | { type: "SET_MESSAGES"; payload: { messages: Messages[] | [] } }
+  | {
+      type: "UPDATE_MESSAGE";
+      payload: { message: Partial<Messages>; messageId: string };
+    }
+  | { type: "DELETE_MESSAGE"; payload: string };
 
-const initialState: AppState = { rooms: [], selectedRoom: undefined, roomAndUsers: [] };
+const initialState: AppState = {
+  rooms: [],
+  selectedRoom: undefined,
+  roomAndUsers: [],
+  messages: [],
+};
 
 const appReducer = (
   state: AppState = initialState,
@@ -62,11 +75,37 @@ const appReducer = (
         ...state,
         selectedRoom: state.rooms.find((room) => room.id === action.payload),
       };
-      case "SET_R_USERS":
-        return{
-          ...state,
-          roomAndUsers: action.payload.roomAndUsers
-        }
+    case "SET_R_USERS":
+      return {
+        ...state,
+        roomAndUsers: action.payload.roomAndUsers,
+      };
+    case "ADD_MESSAGE":
+      return {
+        ...state,
+        messages: [...state.messages, action.payload],
+      };
+    case "SET_MESSAGES":
+      return {
+        ...state,
+        messages: action.payload.messages.sort(
+          (a, b) =>
+            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        ),
+      };
+    case "UPDATE_MESSAGE":
+      return {
+        ...state,
+        messages: state.messages.map((msg) => {
+          if (msg.id === action.payload.messageId) {
+            return {
+              ...msg,
+              ...action.payload.message,
+            };
+          }
+          return msg;
+        }),
+      };
     default:
       return initialState;
   }
