@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
 
 @layer base {
   :root {
@@ -26,7 +25,7 @@
     --ring: 20 14.3% 4.1%;
     --radius: 0.5rem;
   }
- 
+
   .dark {
     --background: 20 14.3% 4.1%;
     --foreground: 60 9.1% 97.8%;
@@ -50,7 +49,6 @@
   }
 }
 
- 
 @layer base {
   * {
     @apply border-border;
@@ -74,4 +72,17 @@
 
 .input-container:focus-within {
   border-color: var(--ring);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 5px;
+  display: block;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--background);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--background);
 }

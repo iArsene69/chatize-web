@@ -6,62 +6,58 @@ import { useSupabaseUser } from "@/lib/providers/supabase-user-provider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Form, FormControl, FormField, FormItem } from "../ui/form";
 import { ChatInput } from "../global/custom-chat-field";
 import { Button } from "../ui/button";
+import { useToast } from "../ui/use-toast";
 
 export default function MessageInput() {
-  const { state } = useAppState();
+  const { state, dispatch } = useAppState();
+  const { toast } = useToast();
   const { user } = useSupabaseUser();
   const nowPlusTwo = new Date(Date.now() + 3600 * 1000 * 24 * 2).toDateString();
-  const form = useForm<MessageForm>({
-    mode: "onChange",
-    resolver: zodResolver(MessageSchema),
-    defaultValues: {
-      fileUrl: "",
-      message: "",
-      userId: user?.id,
-      roomId: state.selectedRoom?.id,
-      type: "text",
-      willDelete: nowPlusTwo,
-    },
-  });
+ 
+
+  const pressEnter = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      onSubmit();
+    }
+    return;
+  };
+
+  const onSubmit = () => {
+    toast({
+      title: "Submited message",
+      description: `Your message: ${state.message}`,
+    });
+    dispatch({
+      type: "TYPE_MESSAGE",
+      payload: { message: "" },
+    });
+  };
   return (
-    <Form {...form}>
-      <form className="flex justify-between items-center">
-        <FormField 
-        control={form.control}
-        name="type"
-        render={({field}) => (
-          <FormItem>
-            
-          </FormItem>
-        )}/>
-        <div className="flex-1">
-          <FormField
-            control={form.control}
-            name="message"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <ChatInput
-                    className="min-w-[300px]"
-                    placeholder="Type a message"
-                    {...field}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-        </div>
-        <Button
-          variant="outline"
-          size="icon"
-          className="rounded-full border border-primary"
-        >
-          Y
-        </Button>
-      </form>
-    </Form>
+    <div className="flex justify-between items-center">
+      <ChatInput
+        onKeyDown={pressEnter}
+        placeholder="Type a message"
+        className="min-w-[300px]"
+        onInput={(e) =>
+          dispatch({
+            type: "TYPE_MESSAGE",
+            payload: { message: e.currentTarget.textContent || "" },
+          })
+        }
+        value={state.message}
+      />
+      <Button
+        variant="outline"
+        size="icon"
+        className="rounded-full border border-primary"
+        type="button"
+        onClick={onSubmit}
+      >
+        Y
+      </Button>
+    </div>
   );
 }

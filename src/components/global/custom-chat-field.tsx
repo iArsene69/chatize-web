@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
-import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 export interface ChatInputProps
   extends React.TextareaHTMLAttributes<HTMLDivElement> {
@@ -22,16 +21,17 @@ const ChatInput = React.forwardRef<HTMLDivElement, ChatInputProps>(
           "w-full ring-offset-background focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-ring min-h-[20px] border border-input px-4 py-2 mx-1 my-2 bg-background rounded-2xl",
           className
         )}
-        ref={ref}
+        ref={editableRef}
         onClick={setFocus}
       >
         <div className="relative">
           <div
             className="overflow-x-hidden input-div overflow-y-auto whitespace-pre-wrap [word-wrap: break-word] z-[1] max-h-[100px] min-h-[20px] p-[0_0_0_2px] outline-0 transition-[0.2s_padding_ease-in-out]"
             contentEditable
-            ref={editableRef}
+            role="textbox"
+            ref={ref}
             {...props}
-          ></div>
+          />
           <div className="top-0 text-muted-foreground pointer-events-none placeholder-div [user-select: none] absolute opacity-0 transition-[0.2s_padding_ease-in-out]">
             {placeholder}
           </div>

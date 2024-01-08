@@ -12,7 +12,7 @@ interface AppState {
   rooms: Rooms[] | [];
   selectedRoom: Rooms | undefined;
   roomAndUsers: RoomMember[] | [];
-  messages: Messages[] | [];
+  message: string | undefined;
 }
 
 type Action =
@@ -22,19 +22,13 @@ type Action =
   | { type: "DELETE_ROOM"; payload: string }
   | { type: "SELECT_ROOM"; payload: string }
   | { type: "SET_R_USERS"; payload: { roomAndUsers: RoomMember[] | [] } }
-  | { type: "ADD_MESSAGE"; payload: Messages }
-  | { type: "SET_MESSAGES"; payload: { messages: Messages[] | [] } }
-  | {
-      type: "UPDATE_MESSAGE";
-      payload: { message: Partial<Messages>; messageId: string };
-    }
-  | { type: "DELETE_MESSAGE"; payload: string };
+  | { type: "TYPE_MESSAGE"; payload: { message: string } };
 
 const initialState: AppState = {
   rooms: [],
   selectedRoom: undefined,
   roomAndUsers: [],
-  messages: [],
+  message: undefined,
 };
 
 const appReducer = (
@@ -80,31 +74,10 @@ const appReducer = (
         ...state,
         roomAndUsers: action.payload.roomAndUsers,
       };
-    case "ADD_MESSAGE":
+    case "TYPE_MESSAGE":
       return {
         ...state,
-        messages: [...state.messages, action.payload],
-      };
-    case "SET_MESSAGES":
-      return {
-        ...state,
-        messages: action.payload.messages.sort(
-          (a, b) =>
-            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-        ),
-      };
-    case "UPDATE_MESSAGE":
-      return {
-        ...state,
-        messages: state.messages.map((msg) => {
-          if (msg.id === action.payload.messageId) {
-            return {
-              ...msg,
-              ...action.payload.message,
-            };
-          }
-          return msg;
-        }),
+        message: action.payload.message,
       };
     default:
       return initialState;
