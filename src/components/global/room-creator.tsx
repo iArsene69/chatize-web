@@ -1,3 +1,5 @@
+'use client'
+
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import React from "react";
 import { Button } from "../ui/button";

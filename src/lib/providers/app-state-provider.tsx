@@ -28,7 +28,7 @@ const initialState: AppState = {
   rooms: [],
   selectedRoom: undefined,
   roomAndUsers: [],
-  message: undefined,
+  message: "",
 };
 
 const appReducer = (
