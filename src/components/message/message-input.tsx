@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { ChatInput } from "../global/custom-chat-field";
 import { Button } from "../ui/button";
 import { useToast } from "../ui/use-toast";
+import TypeDropdown from "./custom-type-dropdown";
 
 export default function MessageInput() {
   const { state, dispatch } = useAppState();
@@ -32,11 +33,9 @@ export default function MessageInput() {
   }, [state.message]);
 
   const pressEnter = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      onSubmit();
-    }
-    return;
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+    onSubmit();
   };
 
   const onSubmit = () => {
@@ -50,12 +49,13 @@ export default function MessageInput() {
     });
   };
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex justify-between px-4 items-center gap-4">
+      <TypeDropdown />
       <ChatInput
         ref={chatRef}
         onKeyDown={pressEnter}
         placeholder="Type a message"
-        className="min-w-[300px]"
+        className="flex-1"
         onInput={(e) =>
           dispatch({
             type: "TYPE_MESSAGE",

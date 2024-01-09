@@ -23,7 +23,7 @@ export default function EmojiPicker({ getValue }: EmojiPickerProps) {
     <div className="flex items-center">
       <Popover>
         <PopoverTrigger asChild>
-          <SmileIcon className="w-5 h-5 text-muted-foreground cursor-pointer" />
+          <SmileIcon className="w-5 h-5 text-muted-foreground cursor-pointer hover:text-muted-foreground/60" />
         </PopoverTrigger>
         <PopoverContent className="bg-transparent border-none">
           <Picker

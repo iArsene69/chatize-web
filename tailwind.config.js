@@ -70,10 +70,23 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+        "rotate-90": {
+          "0%": { transform: "rotate(0deg)" },
+          "10%": { transform: "rotate(45deg)" },
+          "20%": { transform: "rotate(70deg)" },
+          "35%": { transform: "rotate(90deg)" },
+          "45%": { transform: "rotate(130deg)" },
+          "50%": { transform: "rotate(180deg)" },
+          "65%": { transform: "rotate(220deg)" },
+          "80%": { transform: "rotate(270deg)" },
+          "100%": { transform: "rotate(315deg)" },
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "rotate-90": "rotate-90 0.5s linear",
+        "rotate-90-reverse": "rotate-90 0.5s reverse"
       },
     },
   },
