@@ -4,7 +4,7 @@ import { MessageSchema } from "@/lib/form-schema";
 import { useAppState } from "@/lib/providers/app-state-provider";
 import { useSupabaseUser } from "@/lib/providers/supabase-user-provider";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { ChatInput } from "../global/custom-chat-field";
 import { Button } from "../ui/button";
@@ -13,6 +13,8 @@ import TypeDropdown from "./custom-type-dropdown";
 
 export default function MessageInput() {
   const { state, dispatch } = useAppState();
+  const [localUrl, setLocalUrl] = useState<string>("");
+  const [file, setFile] = useState<File | undefined>(undefined);
   const { toast } = useToast();
   const { user } = useSupabaseUser();
   const nowPlusTwo = new Date(Date.now() + 3600 * 1000 * 24 * 2).toDateString();
@@ -38,6 +40,37 @@ export default function MessageInput() {
     onSubmit();
   };
 
+  const onFileInput = (
+    type: keyof typeof MessageType,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (type !== "picture" || !event.target.files) return;
+    const image = event.target.files[0];
+    setLocalUrl(URL.createObjectURL(image));
+    toast({
+      title: "hehe",
+      description: localUrl,
+    });
+    console.log(localUrl);
+
+    // switch (type) {
+    //   case "text":
+    //     throw new Error("Text only message cannot accept file");
+    //   case "picture":
+    //     if (!event.target.files) return;
+    //     const image = event.target.files[0].type;
+    //     setLocalUrl(image);
+    //     console.log(localUrl);
+    //     toast({
+    //       title: "Whut",
+    //       description: localUrl,
+    //     });
+    //     break;
+    //   default:
+    //     break;
+    // }
+  };
+
   const onSubmit = () => {
     toast({
       title: "Submited message",
@@ -50,7 +83,7 @@ export default function MessageInput() {
   };
   return (
     <div className="flex justify-between px-4 items-center gap-4">
-      <TypeDropdown />
+      <TypeDropdown onInputFile={onFileInput} />
       <ChatInput
         ref={chatRef}
         onKeyDown={pressEnter}
