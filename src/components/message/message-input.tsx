@@ -44,31 +44,71 @@ export default function MessageInput() {
     type: keyof typeof MessageType,
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    if (type !== "picture" || !event.target.files) return;
-    const image = event.target.files[0];
-    setLocalUrl(URL.createObjectURL(image));
-    toast({
-      title: "hehe",
-      description: localUrl,
-    });
-    console.log(localUrl);
+    if (!event.target.files) return;
+    const maxSize = (size: number): number => {
+      const MB = 1024 * 1024;
+      return size * MB;
+    };
 
-    // switch (type) {
-    //   case "text":
-    //     throw new Error("Text only message cannot accept file");
-    //   case "picture":
-    //     if (!event.target.files) return;
-    //     const image = event.target.files[0].type;
-    //     setLocalUrl(image);
-    //     console.log(localUrl);
-    //     toast({
-    //       title: "Whut",
-    //       description: localUrl,
-    //     });
-    //     break;
-    //   default:
-    //     break;
-    // }
+    switch (type) {
+      case "text":
+        throw new Error("Text only message cannot accept file");
+      case "picture":
+        const image = event.target.files[0];
+        if (
+          image.type !== "image/png" &&
+          image.type !== "image/jpg" &&
+          image.type !== "image/jpeg"
+        ) {
+          toast({
+            title: "File extension incompatible",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        if (image.size >= maxSize(5)) {
+          toast({
+            title: "Image size exceeding 5MB limit",
+            variant: "destructive",
+          });
+          return;
+        }
+        setLocalUrl(URL.createObjectURL(image));
+        setFile(image);
+        break;
+      case "video":
+        const video = event.target.files[0];
+        if (video.type !== "video/mp4") {
+          toast({
+            title: "File extension incompatible",
+            variant: "destructive",
+          });
+          return;
+        }
+        if (video.size >= maxSize(15)) {
+          toast({
+            title: "Video size exceeding 15MB limit",
+            variant: "destructive",
+          });
+          return;
+        }
+        setLocalUrl(URL.createObjectURL(video));
+        setFile(video);
+        break;
+      case "document":
+        const document = event.target.files[0];
+        if (document.size >= maxSize(50)) {
+          toast({
+            title: "Document size exceeding 50MB limit",
+            variant: "destructive",
+          });
+          return;
+        }
+        setLocalUrl(URL.createObjectURL(document));
+        setFile(document);
+        break;
+    }
   };
 
   const onSubmit = () => {

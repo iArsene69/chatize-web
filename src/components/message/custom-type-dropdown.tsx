@@ -35,7 +35,7 @@ export default function TypeDropdown({ onInputFile }: TypeDropdownProps) {
       <PopoverContent>
         <div className="flex justify-evenly items-center">
           <Button
-            onClick={(e) => setType("picture")}
+            onClick={() => setType("picture")}
             className="bg-gradient-to-br from-pink-600 to-primary rounded-full"
             size="icon"
           >
@@ -43,9 +43,9 @@ export default function TypeDropdown({ onInputFile }: TypeDropdownProps) {
               <input
                 type="file"
                 onChange={(e) => {
-                  if (!e.target.files) return;
-                  const localUrl = e.target.files[0].type;
-                  console.log(localUrl);
+                  onInputFile(type, e);
+                  setType("text");
+                  setOpen(false);
                 }}
                 hidden
                 accept="image/png, .jpg"
@@ -61,7 +61,11 @@ export default function TypeDropdown({ onInputFile }: TypeDropdownProps) {
             <label>
               <input
                 type="file"
-                onChange={async (e) => await onInputFile(type, e)}
+                onChange={(e) => {
+                  onInputFile(type, e);
+                  setType("text");
+                  setOpen(false);
+                }}
                 hidden
                 accept="video/mp4"
               />
@@ -76,7 +80,11 @@ export default function TypeDropdown({ onInputFile }: TypeDropdownProps) {
             <label>
               <input
                 type="file"
-                onChange={async (e) => await onInputFile(type, e)}
+                onChange={(e) => {
+                  onInputFile(type, e);
+                  setType("text");
+                  setOpen(false);
+                }}
                 hidden
                 multiple
               />
