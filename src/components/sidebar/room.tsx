@@ -3,39 +3,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Separator } from "../ui/separator";
 import { getRoomAndUsers } from "@/lib/severActions/server-queries";
 import { useAppState } from "@/lib/providers/app-state-provider";
+import { getRoomName } from "@/lib/utils";
 
 type RoomsProps = {
-  rooms: Rooms;
-  userId: string;
+  rooms: RoomMember;
+  roomName: string;
 };
 
-export default function Rooms({ rooms, userId }: RoomsProps) {
-  const { state, dispatch } = useAppState();
-  const [name, setName] = useState("");
-
-  useEffect(() => {
-    const getName = async (roomId: string) => {
-      const { data, error } = await getRoomAndUsers(roomId);
-      if (!data && error) throw new Error(error);
-      dispatch({
-        type: "SET_R_USERS",
-        payload: { roomAndUsers: data },
-      });
-      const roomName = data.map((r) => {
-        switch (r.access) {
-          case "PRIVATE":
-            return (
-              r.users.find((u) => u.id !== userId)?.username ||
-              r.users.find((u) => u.id !== userId)?.email
-            );
-          case "PUBLIC":
-            return r.slug;
-        }
-      }) as unknown as string;
-      setName(roomName);
-    };
-    getName(rooms.id);
-  }, [rooms]);
+export default function Rooms({ rooms, roomName }: RoomsProps) {
+  const { dispatch } = useAppState();
 
   const selectRoom = (roomId: string) => {
     dispatch({
@@ -55,7 +31,7 @@ export default function Rooms({ rooms, userId }: RoomsProps) {
       </Avatar>
       <div className="flex-auto">
         <div className="flex flex-col gap-2">
-          <div className="w-[100px] truncate">{name}</div>
+          <div className="w-[100px] truncate">{roomName}</div>
           <small className="w-[180px] truncate">Message</small>
           <Separator orientation="horizontal" />
         </div>

@@ -44,45 +44,41 @@ export const getRoomAndUsers = async (roomId: string) => {
       },
     });
 
-    const RoomAndUserMap = new Map<string, RoomMember>();
+    let roomMember;
+
     response.forEach((res) => {
       const {
         rooms: { id, access, slug, createdAt },
         user,
       } = res;
 
-      const UserObj: Users = {
+      const userObj: Users = {
         id: user.id,
-        email: user.email,
+        email: user.email as string,
         username: user.username,
         status: user.status,
         avatar_url: user.avatarUrl,
-        created_at: user.createdAt,
+        created_at: user.createdAt as string,
       };
 
-      if (!RoomAndUserMap.has(id)) {
-        RoomAndUserMap.set(id, {
-          access,
-          created_at: createdAt,
-          id,
-          slug,
-          users: [UserObj],
-        });
-      } else {
-        const existingRoom = RoomAndUserMap.get(id);
-        if (existingRoom) {
-          existingRoom.users.push(UserObj);
-        }
-      }
+      roomMember = {
+        access,
+        created_at: createdAt as string,
+        id,
+        slug,
+        users: [userObj],
+      };
     });
 
-    if (RoomAndUserMap.size)
-      return { data: Array.from(RoomAndUserMap.values()), error: null };
-    return { data: [], error: null };
+    if (roomMember) {
+      return { data: roomMember, error: null };
+    }
+
+    return { data: null, error: null };
   } catch (error) {
     return {
-      data: [],
-      error: "Something went wrong when fetch users and rooms",
+      data: null,
+      error: "Something went wrong when fetching users and room",
     };
   }
 };

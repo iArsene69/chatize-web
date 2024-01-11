@@ -3,7 +3,7 @@
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
-export async function actionLogin({ email, password }: Form) {
+export async function actionLogin({ email, password }: LoginForm) {
   const supabase = createRouteHandlerClient({ cookies });
   const res = await supabase.auth.signInWithPassword({
     email,
@@ -13,7 +13,7 @@ export async function actionLogin({ email, password }: Form) {
   return res;
 }
 
-export async function actionSignUp({ email, password }: Form) {
+export async function actionSignUp({ email, password }: LoginForm) {
   const supabase = createRouteHandlerClient({ cookies });
   const { data } = await supabase.from("users").select("*").eq("email", email);
 
