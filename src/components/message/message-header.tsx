@@ -4,11 +4,8 @@ import { useAppState } from "@/lib/providers/app-state-provider";
 import { useSupabaseUser } from "@/lib/providers/supabase-user-provider";
 import { getRoomName } from "@/lib/utils";
 
-type MessageHeaderProps = {
-  selectedRooms?: Rooms;
-};
 
-export default function MessageHeader({ selectedRooms }: MessageHeaderProps) {
+export default function MessageHeader() {
   const { state } = useAppState();
   const { user } = useSupabaseUser();
   if (!user) return;

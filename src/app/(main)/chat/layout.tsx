@@ -22,9 +22,9 @@ export default async function ChatPageLayout({
   const { data: rooms, error } = await getRooms(user.id);
   if (error) throw new Error(error);
   return (
-    <main className="flex flex-row overflow-hidden h-screen w-screen">
+    <main className="flex flex-row overflow-hidden h-screen">
       <Sidebar rooms={rooms} userId={user.id} />
-      <div className="w-full relative overflow-y-hidden">
+      <div className="w-full relative">
         {children}
       </div>
     </main>

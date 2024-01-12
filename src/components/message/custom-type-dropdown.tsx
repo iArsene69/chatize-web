@@ -32,12 +32,12 @@ export default function TypeDropdown({ onInputFile }: TypeDropdownProps) {
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent>
-        <div className="flex justify-evenly items-center">
+      <PopoverContent className="w-fit">
+        <div className="flex justify-evenly flex-col gap-4 items-start">
           <Button
             onClick={() => setType("picture")}
-            className="bg-gradient-to-br from-pink-600 to-primary rounded-full"
-            size="icon"
+            variant="outline"
+            className="bg-transparent border-none flex justify-center gap-2"
           >
             <label>
               <input
@@ -50,13 +50,14 @@ export default function TypeDropdown({ onInputFile }: TypeDropdownProps) {
                 hidden
                 accept="image/png, .jpg"
               />
-              <Image className="cursor-pointer" />
+              <Image className="cursor-pointer text-blue-600" />
             </label>
+            <p>Picture</p>
           </Button>
           <Button
             onClick={() => setType("video")}
-            className="bg-gradient-to-br from-purple-600 to-primary rounded-full"
-            size="icon"
+            variant="outline"
+            className="bg-transparent border-none flex justify-center gap-2"
           >
             <label>
               <input
@@ -69,13 +70,14 @@ export default function TypeDropdown({ onInputFile }: TypeDropdownProps) {
                 hidden
                 accept="video/mp4"
               />
-              <Video className="cursor-pointer" />
+              <Video className="cursor-pointer text-purple-600" />
             </label>
+            <p>Video</p>
           </Button>
           <Button
             onClick={() => setType("document")}
-            className="bg-gradient-to-br from-indigo-600 to-primary rounded-full"
-            size="icon"
+            variant="outline"
+            className="bg-transparent border-none flex justify-center gap-2"
           >
             <label>
               <input
@@ -88,8 +90,9 @@ export default function TypeDropdown({ onInputFile }: TypeDropdownProps) {
                 hidden
                 multiple
               />
-              <File className="cursor-pointer" />
+              <File className="cursor-pointer text-red-600" />
             </label>
+            <p>Document</p>
           </Button>
         </div>
       </PopoverContent>

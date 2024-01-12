@@ -15,11 +15,19 @@ const ChatInput = React.forwardRef<HTMLDivElement, ChatInputProps>(
   ({ className, placeholder, ...props }, ref) => {
     const { dispatch, state } = useAppState();
     const editableRef = React.useRef<HTMLDivElement>(null);
-    const setFocus = () => {
-      if (editableRef.current) {
-        editableRef.current.focus();
-      }
-    };
+
+    React.useLayoutEffect(() => {
+    if (editableRef.current) {
+      const chatElement = editableRef.current;
+      chatElement.focus();
+      const range = document.createRange();
+      range.selectNodeContents(chatElement);
+      range.collapse(false);
+      const selection = window.getSelection();
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+    }
+  }, [state.message]);
 
     const onEmojiChange = (emoji: string) => {
       dispatch({
@@ -33,8 +41,7 @@ const ChatInput = React.forwardRef<HTMLDivElement, ChatInputProps>(
           "w-full ring-offset-background focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-ring min-h-[20px] border border-input px-4 py-2 mx-1 my-2 bg-background rounded-2xl",
           className
         )}
-        ref={editableRef}
-        onClick={setFocus}
+        ref={ref}
       >
         <div className="flex items-center gap-2">
           <EmojiPicker getValue={onEmojiChange} />
@@ -43,7 +50,7 @@ const ChatInput = React.forwardRef<HTMLDivElement, ChatInputProps>(
               className="overflow-x-hidden input-div overflow-y-auto whitespace-pre-wrap [word-wrap: break-word] z-[1] max-h-[100px] min-h-[20px] p-[0_0_0_2px] outline-0 transition-[0.2s_padding_ease-in-out]"
               contentEditable
               role="textbox"
-              ref={ref}
+              ref={editableRef}
               {...props}
             >
               {state.message}
